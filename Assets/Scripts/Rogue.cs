@@ -10,7 +10,7 @@ public class Rogue : MonoBehaviour
         _mover = GetComponent<Mover>();
     }
 
-    void Update()
+    private void Update()
     {
         _mover.Move();
     }

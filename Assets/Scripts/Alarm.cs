@@ -10,18 +10,6 @@ public class Alarm : MonoBehaviour
     private int _maxVolume = 1;
     private int _minVolume = 0;
 
-    private void OnEnable()
-    {
-        _detector.RogueEntered += DecreaseVolume;
-        _detector.RogueExited += IncreaseVolume;
-    }
-
-    private void OnDisable()
-    {
-        _detector.RogueEntered -= DecreaseVolume;
-        _detector.RogueExited -= IncreaseVolume;
-    }
-
     private void Awake()
     {
         _audioSource = GetComponent<AudioSource>();
@@ -29,7 +17,19 @@ public class Alarm : MonoBehaviour
         _audioSource.playOnAwake = false;
     }
 
-    private void DecreaseVolume()
+    private void OnEnable()
+    {
+        _detector.RogueEntered += IncreaseVolume;
+        _detector.RogueExited += DecreaseVolume;
+    }
+
+    private void OnDisable()
+    {
+        _detector.RogueEntered -= IncreaseVolume;
+        _detector.RogueExited -= DecreaseVolume;
+    }
+
+    public void IncreaseVolume()
     {
         if (_audioSource.isPlaying == false)
         {
@@ -39,14 +39,9 @@ public class Alarm : MonoBehaviour
         _coroutine = StartCoroutine(ChangeVolume(_maxVolume));
     }
 
-    private void IncreaseVolume()
+    public void DecreaseVolume()
     {
         _coroutine = StartCoroutine(ChangeVolume(_minVolume));
-
-        if (_audioSource.isPlaying)
-        {
-            _audioSource.Stop();
-        }
     }
 
     private IEnumerator ChangeVolume(int target)
